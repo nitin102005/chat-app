@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: https://chat-app-sigma-ten-34.vercel.app, // ✅ fixed
+    origin: ENV.CLIENT_URL, // ✅ fixed
     credentials: true,
   },
   transports: ["websocket", "polling"], // ✅ important for deployment
