@@ -19,7 +19,22 @@ if (typeof document !== "undefined" && !document.getElementById(styleId)) {
     }
 
     /* ── Scroll area ── */
-    .cc-scroll::-webkit-scrollbar { width: 3px; }
+    .cc-scroll::-webkit-scrollbar {
+  width: 8px; /* ✅ increase width */
+}
+
+.cc-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cc-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3); /* ✅ more visible */
+  border-radius: 10px;
+}
+
+.cc-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.6); /* ✅ hover effect */
+}
     .cc-scroll::-webkit-scrollbar-track { background: transparent; }
     .cc-scroll::-webkit-scrollbar-thumb {
       background: rgba(255,255,255,0.08);
@@ -52,9 +67,13 @@ if (typeof document !== "undefined" && !document.getElementById(styleId)) {
       color: #0a0a0a;
       border-radius: 18px 18px 4px 18px;
       padding: 10px 14px;
-      max-width: 68%;
+      display: inline-block;
+      max-width: min(90%, 800px);
+      min-width: 0;
       box-shadow: 0 2px 12px rgba(255,255,255,0.10), 0 1px 3px rgba(0,0,0,0.4);
       position: relative;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     /* ── Other bubble: dark glass ── */
@@ -63,11 +82,15 @@ if (typeof document !== "undefined" && !document.getElementById(styleId)) {
       color: rgba(245,245,245,0.9);
       border-radius: 18px 18px 18px 4px;
       padding: 10px 14px;
-      max-width: 68%;
+      display: inline-block;
+      max-width: min(90%, 800px);
+      min-width: 0;
       border: 1px solid rgba(255,255,255,0.09);
       box-shadow: 0 2px 12px rgba(0,0,0,0.3);
       position: relative;
       backdrop-filter: blur(8px);
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     /* ── Timestamp ── */
@@ -158,7 +181,7 @@ function ChatContainer() {
       display: "flex",
       flexDirection: "column",
       flex: 1,
-      height: "100%",
+      height: "100%"
     }}>
       {/* Header */}
       <ChatHeader />
@@ -178,11 +201,13 @@ function ChatContainer() {
           style={{
             flex: 1,
             overflowY: "auto",
+            overflowX: "hidden",
+            minHeight: 0, 
             padding: "32px 24px",
           }}
         >
           {messages.length > 0 && !isMessagesLoading ? (
-            <div style={{ maxWidth: "720px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div style={{ maxWidth: "900px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "6px" }}>
 
               {/* Today separator */}
               <div className="cc-date-sep" style={{ marginBottom: "12px" }}>
@@ -198,9 +223,9 @@ function ChatContainer() {
                   <div
                     key={msg._id}
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: isSelf ? "flex-end" : "flex-start",
+                      display: "block", // ✅ FIX
+                      textAlign: isSelf ? "right" : "left", // ✅ align messages
+                      width: "100%",
                       marginTop: isGrouped ? "2px" : "12px",
                     }}
                   >
@@ -220,8 +245,8 @@ function ChatContainer() {
                             lineHeight: "1.5",
                             fontWeight: 400,
                             whiteSpace: "pre-wrap",        // keep formatting
-                            overflowWrap: "break-word",    // only break when needed
-                            wordBreak: "normal",           // 🔥 keeps spacing + wraps
+                            overflowWrap: "break-word",    // prevent overflow on long tokens
+                            wordBreak: "break-word",       // ensure long strings wrap inside bubble
                           }}>
                             {msg.text}
                           </p>
