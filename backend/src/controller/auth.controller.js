@@ -4,9 +4,12 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const fullName = req.body?.fullName?.trim();
+  const email = req.body?.email?.trim().toLowerCase();
+  const password = req.body?.password;
 
   try {
     if (!fullName || !email || !password) {
@@ -64,6 +67,31 @@ export const signup = async (req, res) => {
   } catch (error) {
     console.log("Error in signup controller:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  try {
+    const token = req.cookies?.jwt;
+    if (!token) return res.status(200).json(null);
+
+    const decoded = jwt.verify(token, ENV.JWT_SECRET);
+    if (!decoded?.userId) {
+      res.cookie("jwt", "", { maxAge: 0 });
+      return res.status(200).json(null);
+    }
+
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) {
+      res.cookie("jwt", "", { maxAge: 0 });
+      return res.status(200).json(null);
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    // Expired/invalid JWT should not fail app boot; clear cookie and return unauthenticated.
+    res.cookie("jwt", "", { maxAge: 0 });
+    return res.status(200).json(null);
   }
 };
 
