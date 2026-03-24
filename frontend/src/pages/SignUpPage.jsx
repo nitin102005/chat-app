@@ -37,7 +37,7 @@ function SignUpPage() {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-linear-to-br from-black via-zinc-900 to-black p-4 font-[DM_Sans]">
-      <div className="relative w-full max-w-6xl md:h-[720px] h-auto">
+      <div className="relative pb-10 w-full max-w-6xl md:h-[720px] h-auto">
 
         {/* <BorderAnimatedContainer> */}
           <div className="flex flex-col md:flex-row w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl border border-white/10 shadow-[0_20px_60px_rgba(255,255,255,0.05)]">
