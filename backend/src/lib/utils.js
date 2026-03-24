@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-// import { ENV } from "./env.js";
+import { ENV } from "./env.js";
 
 export const generateToken = (userId, res) => {
 //   const { JWT_SECRET } = ENV;
@@ -14,7 +14,7 @@ export const generateToken = (userId, res) => {
   res.cookie("jwt", token, {
   maxAge: 7 * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  secure: process.env.NODE_ENV !== "development",
+  secure: true, 
   sameSite: "none", // ✅ REQUIRED for cross-domain
 });
 
