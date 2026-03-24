@@ -1,10 +1,12 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { ENV } from "../lib/env.js";
+import cookieParser from "cookie-parser";
 
 export const protectRoute = async (req, res, next) => {
   try {
     // check token exist 
+    app.use(cookieParser());
     const token = req.cookies.jwt;
     if (!token) return res.status(401).json({ message: "Unauthorized - No token provided" });
     // check if token is valid or not 
