@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 const BASE_URL ="https://chat-app-n70t.onrender.com";
 
-export const useAuthStore = create((set, get) => ({
+xport const useAuthStore = create((set, get) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
@@ -24,7 +24,7 @@ export const useAuthStore = create((set, get) => ({
         get().disconnectSocket();
       }
     } catch (error) {
-      console.log("Error in authCheck:", getErrorMessage(error, "Unable to verify authentication"));
+      console.log("Error in authCheck:", error?.response?.data?.message || "Unable to verify authentication");
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -40,7 +40,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully!");
       get().connectSocket();
     } catch (error) {
-      toast.error(getErrorMessage(error, "Signup failed"));
+      toast.error(error?.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
     }
@@ -56,7 +56,7 @@ export const useAuthStore = create((set, get) => ({
 
       get().connectSocket();
     } catch (error) {
-      toast.error(getErrorMessage(error, "Login failed"));
+      toast.error(error?.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
     }
@@ -80,8 +80,8 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {
-      console.log("Error in update profile:", getErrorMessage(error, "Profile update failed"));
-      toast.error(getErrorMessage(error, "Profile update failed"));
+      console.log("Error in update profile:", error?.response?.data?.message || "Profile update failed");
+      toast.error(error?.response?.data?.message || "Profile update failed");
     }
   },
 
@@ -107,4 +107,5 @@ export const useAuthStore = create((set, get) => ({
     if (get().socket?.connected) get().socket.disconnect();
   },
 }));
+
 
