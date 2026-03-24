@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 const BASE_URL ="https://chat-app-n70t.onrender.com";
 
-xport const useAuthStore = create((set, get) => ({
+export const useAuthStore = create((set, get) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
